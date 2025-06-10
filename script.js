@@ -498,3 +498,7 @@ let tall3 = [1, 15, 8, 23, 42, 7, 3, 18];
 if (tall3 % 2 === 0) {
     console.log(`${tall3}`)
 }
+
+if (tall3 % 2 === 0) {
+    console.log(`${tall3}`)
+}
