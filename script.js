@@ -1,3 +1,14 @@
+// -- Læreplan i Javascript --
+
+// ✅ Steg 1. Variabler
+// ✅ Steg 2. if/else-setninger
+// ✅ Steg 3. Løkker (for, for...of)
+// ✅ Steg 4. Funksjoner
+// ✅ Steg 5. Brukerinput (med prompt())
+// ✅ Steg 6. Arrays
+// ✅ . Metoder som .filter(), .map(), .includes(), .slice(), .join(), .push() og mange flere
+// Steg 7. Objecter
+
 // Skrive til Cnsollen i nettleseren (F12 -> Consol)
 console.log("javascript kode");
 
@@ -492,13 +503,66 @@ if (resultat9.length > 0) {
 //// VIDERE OPPGAVER i ARRAYS ////
 
 // Oppgave 1: Kombiner filter() og map() med tall
-let tall3 = [1, 15, 8, 23, 42, 7, 3, 18];
+let tall3 = [4, 15, 100, 23, 42, 7, 3, 18];
 // - Lag en ny array med tall som er partall og større enn 10
-// - For å sortere ut partall, må sjekker jeg om de kan deles på 2
-if (tall3 % 2 === 0) {
-    console.log(`${tall3}`)
+// - Sortere ut partall, sjekker jeg om de kan deles på 2 (eks: 4 % 2, 2 går to ganger opp i 4. Når vi har når tallet 4, er det ingen rest dvs. 0 rest)
+let filtrereTall  = tall3.filter(t => t % 2 === 0 && t > 10).sort() // Henter ut partal (even) samt de som er større enn 10
+let tekstStreng = filtrereTall.map(t => `Tallet: ${t}`) // GJøre om hver instans til tekststreng
+
+console.log(`${tekstStreng}`)
+
+// Oppgave 2: Rydd opp i tekst med map() og trim()
+
+let råData = [" sara", "THOMAS ", " Siggen", "LARS ", "Kari "];
+// 1. Fjerne mellomrom
+// 2. Alt til små bokstaver
+
+let data = råData.map(n => n.toLowerCase().trim()); // Gjør hver enkel verdi/navn små og fjerner mellomrom
+console.log(`${data.join(", ")}`) // Med "template-literal": Bruker join() for å gjøre om hele til tekststren samt med komma kun mellom nanvene.
+console.log(data.join(", ")) // Bruker join() for å gjøre om hele til tekststren samt med komma kun mellom nanvene.
+console.log(data) // Gir (5) ['sara', 'thomas', 'siggen', 'lars', 'kari']
+
+// Oppgave 3: Bruk .slice() til å lage en ny liste
+
+let navn10 =  ["Sara", "Thomas", "Siggen", "Lars", "Kari", "Marius", "Anne"];
+let treSisteNavn = navn10.slice(4);
+console.log(treSisteNavn);
+
+// Oppgave 4 – Bruk .join() til å lage én streng av navnene
+
+let navn11 = ["Sara", "Thomas", "Siggen", "Lars", "Kari"];
+// 1. Bruk .join() til å lage en setning med alle navnene på én linje – skilt med komma og mellomrom:
+let navnSamlet = navn11.join(", ");
+console.log(navnSamlet);
+// 2. Deretter – lag en ny versjon som bruker " og " før siste navn i stedet for bare komma:
+let førsteDel = navn11.slice(0, -1); // I slice(start, end), kan du bruke negative tall for å telle baklengs fra slutten av arrayet.
+console.log(førsteDel);
+let sisteNavn = navn11.slice(4); // Måte 1 å vise resultatet på
+console.log(`Måte 1: ${førsteDel.join(", ")} og ${sisteNavn}`); 
+let sisteNavn2 = navn11[navn11.length -1]; // Måte 2 å vise resultatet på
+console.log(`Måte 2: ${førsteDel.join(", ")} og ${sisteNavn2}`); 
+
+// Bonusoppgave: Lag en fin setning av navnene i arrayen
+// Endrer vi på antall navn i arrayet nedenfor, så opdateres resultattet deretter.
+let navn12 = ["Sara", "Thomas", "Siggen", "Seth", "Kari"];
+let førsteDel2 = navn12.slice(0, -1); // Henter ut alle navn uten om det siste navnet 
+let andreDel2 = navn12.slice(-1) // Henter ut kun det siste navnet. OBS: slice(-1) gir et nytt array med ett element, f.eks. ["Kari"]
+// Måte 1 å hetne ut siste verdi i arrayet: Resultattet blir et array
+let etNavn = navn12.length;
+// Måte 2 å hetne ut siste verdi i arrayet: Resultattet bri en streng og ikke array)
+let sisteNavn3 = navn12[navn12.length - 1]; // Henter u siste navn som string og ikke som array.
+console.log(sisteNavn3); 
+if (etNavn === 1) {
+    console.log(`${andreDel2} - Antall navn: ${etNavn}`) // Vises kun når det er et navn i Arrayet.
+} else if (etNavn < 1) {
+    console.log(`Ingen navn i arrayet `) // Vises kun når det ikke er noen navn i arrayet
+} else {
+    console.log(`${førsteDel2.join(", ")} og ${andreDel2}`); // Viser alle navn i arrayen etterhverandre, men legger til "og" før siste navn
 }
 
-if (tall3 % 2 === 0) {
-    console.log(`${tall3}`)
-}
+
+//////////////////////////////////////////////////////
+// Steg 7. Objecter
+//////////////////////////////////////////////////////
+
+// Oppgave 1: Lag et objekt
