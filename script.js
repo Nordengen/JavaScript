@@ -562,7 +562,183 @@ if (etNavn === 1) {
 
 
 //////////////////////////////////////////////////////
-// Steg 7. Objecter
+// Steg 7. Objekter
 //////////////////////////////////////////////////////
 
-// Oppgave 1: Lag et objekt
+// HERsakl jeg gå gjennom: 
+// Trinn 1. Objekter (objects)
+// Trinn 2. Funksjoner som tar imot og returnerer data
+// Trinn 3. Array med objekter
+// Trinn 4. Avansert logikk:
+// Trinn 5. Interaktive mini-prosjekter
+
+
+// Oppgave 1 (Steg 7: Objekter): Lag et objekt
+
+// - Lag et objekt som representerer deg selv, med følgende egenskaper:
+// - navn (streng)
+// - alder (tall)
+// - erStudent (boolean)
+// - interesser (array med 2–3 hobbyer)
+
+let person = {
+    fNavn: "Morten",
+    alder: 36,
+    erStudent: false,
+    interesser: ["musikk", "kode", "øl", "whisky"]
+};
+console.log(person.fNavn, person.erStudent, person.interesser[0])
+
+// Oppgave 2 (Steg 7: Objekter): – Flere personer i en array
+// - Lag en array som heter personer, som inneholder flere person-objekter (minst 3).
+// - Hver person bør ha:
+// - fNavn
+// - alder
+// - interesser (minst 2)
+
+let personer = [
+    {
+        fNavn: "Sara",
+        alder: 26,
+        interesser: ["koding", "sykle", "serier"]
+    },
+    {
+        fNavn: "Thomas",
+        alder: 27,
+        interesser: ["gaming", "aksjer", "styrketrening"]
+    },
+    {
+        fNavn: "Siggen",
+        alder: 26,
+        interesser: ["koding", "vin", "fotball"]
+    }
+];
+console.log(personer[0].fNavn) // Tester at det fungerer. Vleger først første plass i arryaet "Personer" og deretter egenskapen.
+
+// Måte 1 å hente ut og vise innhold fra objektet Personer
+let teller2 = 1; // Gjør det mulig å vite plassen i arrayet. Det fir ikke for...of-løkka.
+for (let person of personer) {
+    console.log(`Person ${teller2} heter ${person.fNavn} og er ${person.alder} år. Første interesse: ${person.interesser[0]}`)
+    teller2 ++; // Letter til en i teller for hver gang scriptet løper gjennom denne løkka.
+}
+
+// Måte 2 å hente ut og vise innhold fra objektet Personer
+for (let i = 0; i < personer.length; i ++) {
+    console.log(`${personer[i].fNavn} er ${personer[i].alder} år gammel!`)
+}
+
+personer.forEach((person, indeks) => {
+    console.log(`${person.fNavn}`);
+})
+
+// Oppgave 3 (Steg 7: Objekter): – Vis navn og alder - Delt i 3 oppgaver
+
+// Oppgave 3 - Del 1: 
+// - Lag en for...of-løkke som skriver ut:
+// - "Sara er 26 år."
+let personer2 = [
+    {
+        fNavn: "Sara",
+        alder: 26
+    },
+    {
+        fNavn: "Thomas",
+        alder: 31
+    },
+    {
+        fNavn: "Siggen",
+        alder: 36
+    }
+];
+
+for (let person of personer2) {
+    console.log(`${person.fNavn} er ${person.alder} år.`)
+    break; // Stopper loopen etter første iterasjon/gang den løper gjennom løkka. Da får vi "Sara er 26 år." som resultat.
+}
+
+// Oppgave 3 - Del 2: Vis bare de over 30 år
+// - Bruk en for...of-løkke eller filter() og skriv ut:
+// - "Thomas er over 30 år."
+for (let person of personer2) {
+    if (person.alder > 30) {  // De som  er større enn 30 
+        console.log(`${person.fNavn} er over 30`)
+        break;
+    }    
+}
+
+// Løses med filter()
+let peronOver30 = personer2.filter(p => p.alder > 30);
+for (let person of peronOver30) {
+    console.log(`${person.fNavn} er over 30 år. Dette ble måte to.`)
+}
+
+// Oppgave 3 - Del 3: Legg til en ny person (i eksisterende Array personer2 lenger opp) og vis oppdatert liste
+// - Bruk .push() til å legge til en ny person i arrayen:
+
+personer2.push({
+    fNavn: "Seth",
+    alder: 20
+});
+
+personer2.forEach((person, indeks) => {
+    console.log(`${person.fNavn} er ${person.alder} år.`)
+})
+
+// Oppgave 3 - Ekstra: Kun finne den første som matcher:
+let enPerson = personer2.find(p => p.alder > 30);
+if (enPerson) {
+    console.log(`${enPerson.fNavn} er første person vi fant i arrayet som er over 30 år.`)
+}
+
+// Kun test av forEach-løkke, for å forstå den
+let tall10 = [10, 20, 30];
+tall10.forEach((verdi, indeks) => { // Går gjennom løkka her 3 ganger her da det er tre verdier i arrayet.
+    console.log(verdi, indeks) // Første gang innholder "verdi" tallet 10 og "indeks" får da verdien 0 (1. plass).
+})
+// 10 0
+// 20 1
+// 30 2
+
+// Oppgave 4 – Personer med interesser - 3 deler
+let personer3 = [
+    {
+        navn: "Sara",
+        alder: 26,
+        interesser: ["musikk", "trening", "matlaging"]
+    },
+    {
+        navn: "Thomas",
+        alder: 31,
+        interesser: ["kode", "gaming", "musikk"]
+    },
+    {
+        navn: "Siggen",
+        alder: 36,
+        interesser: ["bøker", "jogge", "reising"]
+    }
+];
+
+// Oppgave 4 - Del 1: List opp interessene til hver person
+personer3.forEach((element, indeks) => {
+    console.log(`${element.navn} har følgende interesser: ${element.interesser.join(", ")}`)
+})
+// Oppgave 4 - Del 2 - Finn personer som liker "musikk"
+let likerMusikk = personer3.filter(p => p.interesser.includes("musikk")); // Sjekker om arrayet "interesser" inneholder verdien "musikk".
+for (let person of likerMusikk) { // Bruker for...of tl å liste ut hver person som vi får treff på
+    console.log(`${person.navn} liker musikk.`)
+}
+// Oppgave 4 - Del 3: Legg til en ny person i arrayen med push()
+personer3.push(
+    {
+        navn: "Seth",
+        alder: 20,
+        interesser: ["trening", "sjokolade", "musikk"]
+    }
+)
+// Oppgave 4 - Bonus (valgfritt):
+let likerMusikkTrening = personer3.filter(p => p.interesser.includes("musikk") && p.interesser.includes("trening"));
+for (let person of likerMusikkTrening) {
+    console.log(person.navn);
+}
+
+// KLAR for enda kulere bonus vriant
