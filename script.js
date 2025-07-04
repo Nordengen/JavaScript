@@ -741,4 +741,53 @@ for (let person of likerMusikkTrening) {
     console.log(person.navn);
 }
 
-// KLAR for enda kulere bonus vriant
+// Oppgave 4 - Bonusoppgave: Finn alle personer som har en bestemt interesse
+// Oppgavetekst:
+// - Lag en funksjon eller et lite søk der du skriver inn ønsket interesse i en variabel, og så listes alle personer med den interessen ut.
+let personer4 = [
+    {
+        fNavn: "Sara",
+        alder: 26,
+        interesser: ["musikk", "trening", "koding"]
+    },
+    {
+        fNavn: "Thomas",
+        alder: 31,
+        interesser: ["film", "matlaging", "løping"]
+    },
+    {
+        fNavn: "Siggen",
+        alder: 36,
+        interesser: ["TRENING", "musikk", "reising"]
+    },
+    {
+        fNavn: "Seth",
+        alder:20,
+        interesser: ["bil", "sjokolade", "musikk"]
+    }
+];
+
+let interesseSøk= "TRENing"; // Søke etter en spesifikk interesse
+// let søkInteresse = personer4.filter(p => p.interesser.includes(interesseSøk.trim().toLowerCase())); // Her gjør vi ikke bokstavenesmå fra  arrayen
+let søkInteresse = personer4.filter(p => p.interesser.some(i => i.toLowerCase() === interesseSøk.trim().toLowerCase())); // Her gjør vi bokstavene små både i søket og i arrayen
+
+if (interesseSøk.trim() === "") { // Sjekker om det er skrevet inn noe.
+    console.log("Det er ikke skrevet inn noen intereesse.")
+} else {
+    if (søkInteresse.length > 0) { // Sjekker om det er funnet en mach fra arrayet (antallet matcher ligger i denne variabelen).
+        for (let person of søkInteresse) { // Går gjennom alle matchene som skrver ut dette i consol log nedenfor.
+        console.log(`${person.fNavn} har ${interesseSøk.trim().toLowerCase()} som interesse.`)
+        }
+    } else { // Om ingen matcher arrayet, havner søket her.
+        console.log(`Ingen personer med interesse ${interesseSøk.trim().toLowerCase()}`)
+    }
+}
+// Bonusforslag til oppgave over
+
+// som() oppgave- Sjekk om et navn finnes i en liste:
+let navnListe = ["Lise", "Anders", "Tobias", "Sara"];
+let søkeNavn = "TOBIAS"; // Søkeord
+let finnesNavn = navnListe.some(n => n.toLocaleLowerCase().trim() === søkeNavn.toLocaleLowerCase().trim()) // some() returnerer true/false
+console.log(finnesNavn) // Viser enten true eller false
+
+// FERDIG med det over her. 
