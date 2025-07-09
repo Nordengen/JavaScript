@@ -813,5 +813,10 @@ function søkEtterInteresse(interesse) {
 
 søkEtterInteresse("musikk") // Her skriver vi inn en interesse som parameter i denne funksjonen.
 
-// Forsett å oppdatere for...of i word
 // Deretter forstett med oppgagen
+
+function søkEtterVerdi(minVerdi) {
+  console.log("Du søkte etter: " + minVerdi);
+}
+
+søkEtterVerdi(23); // Output: Du søkte etter: 23
