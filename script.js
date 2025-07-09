@@ -782,12 +782,36 @@ if (interesseSøk.trim() === "") { // Sjekker om det er skrevet inn noe.
         console.log(`Ingen personer med interesse ${interesseSøk.trim().toLowerCase()}`)
     }
 }
-// Bonusforslag til oppgave over
+// Bonusforslag til oppgave over - Oppgave 4 - Bonusoppgave
 
 // som() oppgave- Sjekk om et navn finnes i en liste:
 let navnListe = ["Lise", "Anders", "Tobias", "Sara"];
 let søkeNavn = "TOBIAS"; // Søkeord
 let finnesNavn = navnListe.some(n => n.toLocaleLowerCase().trim() === søkeNavn.toLocaleLowerCase().trim()) // some() returnerer true/false
-console.log(finnesNavn) // Viser enten true eller false
+// Her sjekker vi om verdien i variabelen "søkeNavn" (eks. "tobias", gjort om til små) også er i arrayet "navnListe". 
+// Her finnes Tobias, og derfor returnerer den True. Da kan man f.eks. ha en if/else: hvis ture, "Tobias eksisterer i arrayet" osv.
+console.log(finnesNavn) // Her visers det nå ture om det var en match i arrayet fra søkevariabelen (søkeNavn).
 
-// FERDIG med det over her. 
+// Utvide oppgaven over - Oppgave 4 - Bonusoppgave - Lage en funksjon som (bruker samme array, altså "person4"):
+// - Tar inn en interesse som parameter (f.eks. "musikk")
+// - Søker i arrayen personer4
+// - Logger alle personer som har denne interessen
+function søkEtterInteresse(interesse) {
+    if (interesse.trim() === "") {
+        console.log("Du må skrive inn en interesse!")
+        return
+    }
+    let resultat = personer4.filter(n => n.interesser.some(i => i.toLocaleLowerCase() === interesse.trim().toLowerCase())) // Finner samme interesser i arrayet som i variabelen.
+    console.log(resultat.fNavn)
+    console.log("---------------")
+    if (resultat.length > 0) { // Om den fant minst en match får vi inn her.
+        for (let person of resultat) {
+            console.log(person.fNavn)
+        }
+    }        
+}
+
+søkEtterInteresse("musikk") // Her skriver vi inn en interesse som parameter i denne funksjonen.
+
+// Forsett å oppdatere for...of i word
+// Deretter forstett med oppgagen
