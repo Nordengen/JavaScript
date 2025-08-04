@@ -801,22 +801,36 @@ function søkEtterInteresse(interesse) {
         console.log("Du må skrive inn en interesse!")
         return
     }
-    let resultat = personer4.filter(n => n.interesser.some(i => i.toLocaleLowerCase() === interesse.trim().toLowerCase())) // Finner samme interesser i arrayet som i variabelen.
+    let resultat = personer4.filter(n => n.interesser.some(i => i.toLowerCase() === interesse.trim().toLowerCase())) // Finner samme interesser i arrayet som i variabelen.
     console.log(resultat.fNavn)
     console.log("---------------")
-    if (resultat.length > 0) { // Om den fant minst en match får vi inn her.
-        for (let person of resultat) {
-            console.log(person.fNavn)
+    if (resultat.length > 0) { // Om den fant minst en match, går den inn her.
+        for (let person of resultat) { // for...of-løkke. Går gjennom arrayet "resultet" og hver match legges i den nye variabelen "person" for hver runde.
+            console.log(person.fNavn) // For hver runde/loop listetes personens fornanv ut i konsollen som har interessen man skrev inn.
         }
     }        
 }
 
-søkEtterInteresse("musikk") // Her skriver vi inn en interesse som parameter i denne funksjonen.
+søkEtterInteresse("musikk") // Her skriver vi inn en interesse som parameter i denne funksjonen. Navnene til persoenen som har dette liset ut i consolen.
 
-// Deretter forstett med oppgagen
-
+// Dette er kuneen test for å se vordan inn-parameteret fungerer. "miinVerdi" kan hete hva som helst i funksjonen.
 function søkEtterVerdi(minVerdi) {
   console.log("Du søkte etter: " + minVerdi);
 }
-
 søkEtterVerdi(23); // Output: Du søkte etter: 23
+
+// Utvide oppgaven over - Oppgave 4 - Bonusoppgave - Tar inn flere interesser og viser de so har begge/alle
+// - Lag en funksjon som:
+// - Tar inn en array av interesser, som ["musikk", "trening"]
+// - Søker etter personer som har alle disse interessene i sin interesser-liste
+// - Skriver ut navnene på de som matcher
+// --- Jeg skriver je hele funksjonen på nytt da den blir litt annerledes, men bruker samme arrayet "personer4" lenger opp ---
+function søkEtterInteresse2(interesser) {
+    if(!Array.isArray(interesser)){
+        console.log("Ikke skrevet inn noe.")
+    } else{
+        console.log("Alt ok")
+    }
+}
+
+søkEtterInteresse2(); // Må ha Array som input-parameter her med interessene. Nanvne til se som har interessene vises i konsollen
