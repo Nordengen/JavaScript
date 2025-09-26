@@ -565,13 +565,15 @@ if (etNavn === 1) {
 // Steg 7. Objekter
 //////////////////////////////////////////////////////
 
-// HERsakl jeg gå gjennom: 
+// HER sakl jeg gå gjennom: 
 // Trinn 1. Objekter (objects)
 // Trinn 2. Funksjoner som tar imot og returnerer data
 // Trinn 3. Array med objekter
 // Trinn 4. Avansert logikk:
 // Trinn 5. Interaktive mini-prosjekter
 
+// ---- Steg 7 - Trinn 1 ---
+// Objekter
 
 // Oppgave 1 (Steg 7: Objekter): Lag et objekt
 
@@ -787,7 +789,7 @@ if (interesseSøk.trim() === "") { // Sjekker om det er skrevet inn noe.
 // som() oppgave- Sjekk om et navn finnes i en liste:
 let navnListe = ["Lise", "Anders", "Tobias", "Sara"];
 let søkeNavn = "TOBIAS"; // Søkeord
-let finnesNavn = navnListe.some(n => n.toLocaleLowerCase().trim() === søkeNavn.toLocaleLowerCase().trim()) // some() returnerer true/false
+let finnesNavn = navnListe.some(n => n.toLowerCase().trim() === søkeNavn.toLowerCase().trim()) // some() returnerer true/false
 // Her sjekker vi om verdien i variabelen "søkeNavn" (eks. "tobias", gjort om til små) også er i arrayet "navnListe". 
 // Her finnes Tobias, og derfor returnerer den True. Da kan man f.eks. ha en if/else: hvis ture, "Tobias eksisterer i arrayet" osv.
 console.log(finnesNavn) // Her visers det nå ture om det var en match i arrayet fra søkevariabelen (søkeNavn).
@@ -802,6 +804,8 @@ function søkEtterInteresse(interesse) {
         return
     }
     let resultat = personer4.filter(n => n.interesser.some(i => i.toLowerCase() === interesse.trim().toLowerCase())) // Finner samme interesser i arrayet som i variabelen.
+    // filter() beholder bare matchene
+    // some() sjekker om minst et ellement i arrayen matcher med innholdet i parameteret i "interesser"
     console.log(resultat.fNavn)
     console.log("---------------")
     if (resultat.length > 0) { // Om den fant minst en match, går den inn her.
@@ -822,15 +826,470 @@ søkEtterVerdi(23); // Output: Du søkte etter: 23
 // Utvide oppgaven over - Oppgave 4 - Bonusoppgave - Tar inn flere interesser og viser de so har begge/alle
 // - Lag en funksjon som:
 // - Tar inn en array av interesser, som ["musikk", "trening"]
-// - Søker etter personer som har alle disse interessene i sin interesser-liste
+// - Søke etter personer som har alle disse interessene i sin interesser-liste. Matcher alle interessene, lilstes navnet til personen ut i consolen.
 // - Skriver ut navnene på de som matcher
 // --- Jeg skriver je hele funksjonen på nytt da den blir litt annerledes, men bruker samme arrayet "personer4" lenger opp ---
-function søkEtterInteresse2(interesser) {
-    if(!Array.isArray(interesser)){
-        console.log("Ikke skrevet inn noe.")
-    } else{
-        console.log("Alt ok")
+function søkEtterInteresse2(interesseListe) {
+    if(!Array.isArray(interesseListe) || interesseListe.some(item => item.trim() === "")) { // Array.isArray sjekker om paremeteret "interesser" inneholder array, noe det må være.
+        console.log("Input er enten ikke et Array eller har ikke verdi.") // Om "interesser" ikke er et array, blir det false og går inn her
+        // Havner inn her og blir ugyldig input om :
+        // - input ikke er en array
+        // - input ar array, men ikke kun står med ""
+        // - input ar array, men står med fnutter og mellomrom " "     
+        //   some() om minst en av elementene i arrayet har "" eller " ", havner den inn her.
+        return;
+    } 
+    console.log("Alt ok:", Array.isArray(interesseListe)) // Viser at inpt er en Array med minst en verdi/interesse innskrevet.
+    let søk10 = interesseListe.map(n => n.toLowerCase().trim());
+    let resultat10 = personer4.filter(person => søk10.every(inter => person.interesser.some(i => i.toLowerCase() === inter))); 
+    // FORKLARING   
+    // filter() beholder bare matchene (de som har interessene fra input).
+    // person => innerholder en person fra arrayet "personer4" om gangen.
+    // every() returnerer true om alle elementene oppfyller teringelsen (om alle interessene fra søket er helt like de i arrayet)
+    // søk10.every(inter => ...) alle verdiene fra input havner i denne midlertidige "inter"-variabelen (en og en for hver gang)
+    // inter-variabelen opprettets i every()-metoden (må man bare kallle den midlertidige variaelen for noe, kan hete hva som helst)
+    // === inter her sjekker vi om interessene i arrayet vi har gått gjennom (person.interesser.some...) er lik den midlertidige variabelen
+    // for...of-løkka under lister ut alle som er like
+    if(resultat10.length > 0) {
+        for (let person of resultat10) {
+            console.log(`${person.fNavn} har interessene: ${søk10.join(", ")}`);
+        }
+    } else {
+            console.log(`Ingen personer har interesse(ne): ${søk10.join(", ")}`);
     }
 }
+søkEtterInteresse2(["musikk", "koding", "Løping"]); // Må ha Array som input-parameter her med interessene. Nanvne til se som har interessene vises i konsollen
 
-søkEtterInteresse2(); // Må ha Array som input-parameter her med interessene. Nanvne til se som har interessene vises i konsollen
+//////////////////////////////////////
+// ---- Steg 7. Objekter - Trinn 2 ---
+//////////////////////////////////////
+// Funksjoner som tar imot og returnerer data
+
+// Trinn 2 går gjennom:
+// 1. Å lage funksjoner som tar objekter som argument – F.eks. function skrivUtPerson(person) { ... }
+// 2. Å returnere nye objekter eller arrays fra funksjoner - F.eks. returnere alle personer med alder over 30.
+// 3. Kombinere filter(), map(), og reduce() – For å gjøre databehandling mer effektiv og gjenbrukbar.
+// 4. Skrive kode som kan gjenbrukes med forskjellige datasett - F.eks. en funksjon som filtrerer etter interesser uansett hvilket array av personer du gir inn.
+
+// Oppgave 1: Funksjon som returnerer navn på personer over en viss alder fra array (objekter)
+// Arrayet med personer
+let personer5 = [
+    {
+        fNavn: "Siggen", 
+        alder: 26
+    },
+    {
+        fNavn: "Thomas",
+        alder: 27
+    },
+    {
+        fNavn: "Sara",
+        alder: 35
+    },
+    {
+        fNavn: "Seth",
+        alder: 21
+    }
+]
+
+function hentePersonerOverAlder(personer, alder) {
+    let eldrePersoner = personer.filter(t => t.alder > alder) // Inneholder de som er eldre enn enn input-alderen.
+    let navnPersoner = eldrePersoner.map(p => p.fNavn); // Inneholder navnene til de som har en viss alder.    
+    return navnPersoner;    
+}
+let resultat11 = hentePersonerOverAlder(personer5, 31) // Tar inn et array og en alder som input-parameter
+console.log(`Resultet (array personer5): ${resultat11}`)
+
+console.log("") // Kun for linjeskift (lage et skille i consollen fra forrige oppgave)
+
+// Oppgave 2: Hent personer over en viss alder som også har en spesifikk interesse
+// Del 1 – Funksjon
+// Lag en funksjon som:
+// Tar imot tre parametere:
+// en array av personer
+// en minimumsalder (f.eks. 30)
+// en interesse (f.eks. "musikk")
+// Returnerer navnene på personer som:
+// er eldre enn eller lik minimumsalder
+// og har interessen i sin interesser-liste
+let personer6 = [
+    {
+        fNavn: "Sara",
+        alder: 36,
+        interesser: ["løpe", "musiKk", "hest"]
+    },
+    {
+        fNavn: "Thomas",
+        alder: 27,
+        interesser: ["trening", "musikk", "mat"]
+    },
+    {
+        fNavn: "Siggen",
+        alder: 26,
+        interesser: ["kode", "løpe", "vin"]
+    },
+    {
+        fNavn: "Sandra",
+        alder: 32,
+        interesser: ["tegne", "musikk", "sykle"]
+    }
+]
+function finnePersonMedInteresse(personer, alder, interesse) {    
+    console.log("Oppgave 2 (Trinn 2)");
+    // Feilhåndtering:
+    if (!Array.isArray(personer)) { // Sjekker først om input er et array, noe som er kravet i oppgaven her.
+        console.log("Ikke oppgitt et Array som input.")
+        return []; // Stopper scriptet fra å kjøre .filter()-koden nednefor.
+    } else if (interesse.trim() === "") { // Sjekker om det er skrevet inn en interesse. 
+        console.log("Skriv inn en interesse.")
+        return []; // Stopper scriptet fra å kjøre .filter()-koden nednefor.
+    } else if (typeof alder !== "number") { // Sjekker om alder er en int og ikke en string.
+        console.log("Sriv inn et tall!")
+        return []; // Stopper scriptet fra å kjøre .filter()-koden nednefor.
+    } else if (alder <= 0) {
+        console.log("Skriv inn et tall større enn null!")
+        return []; // Stopper scriptet fra å kjøre .filter()-koden nednefor.
+    } else {
+        return personer.filter(t => t.alder > alder && t.interesser.some(i => i.toLowerCase().trim() === interesse.toLowerCase().replace(/\s+/g, ""))).map(p => p.fNavn);
+    }
+    // Filterer sånn at vi kun har de som er eldre enn input-alderen.    
+    // filter() returnerer array med alle som er er eldre enn input-alder)
+    // some() Sjekker om minst en av interessene er lik/matcher input-interessen.
+    // map() Bruker denne til å hente ut nanvene fra resultatet (de som matcher med påde alder og interesse).
+    // replace(/\s+/g, " ") - Hånderer mellomrom både, i starten, mellom bokstavene og på slutten av ordet.
+    // trim() - Til forskjell, fjerner kun mellomrom før og etter ordet.
+    // Håndterer store og små bokstaver
+}
+let resultat12 = finnePersonMedInteresse(personer6, 10, "   MUS  IKK  ");
+console.log(`Resultat (array personer6): ${resultat12}`)
+
+console.log("") // Kun for linjeskift (lage et skille i consollen fra forrige oppgave)
+
+// Oppgave 3 – Filtrering og sortering
+// - Du skal lage en funksjon som:
+// - Tar inn:
+// - Et array med personer (navn, alder, interesser)
+// - En alder (minAlder)
+// - En interesse (søkeInteresse)
+// - Filtrerer kun de som er eldre enn minAlder
+// - Sjekker at de har søkeInteresse
+// - Sorterer resultatet etter alder, fra eldst til yngst
+// - Returnerer en liste med kun navnene
+let personer7 = [
+    {
+        fNavn: "Thomas",
+        alder: 28,
+        interesser: ["data", "musikk", "trening", "frimerker"]
+    },
+    {
+        fNavn: "Seth",
+        alder: 21,
+        interesser: ["bil", "mat", "hoppe hoppetau", "golf"]
+    },
+    {
+        fNavn: "Siggen",
+        alder: 27,
+        interesser: ["mat", "trening", "kode", "vin", "musikk"]
+    },
+    {
+        fNavn: "Joey",
+        alder: 25,
+        interesser: ["gaming", "serier", "løpe", "mat", "bil"]
+    },
+    {
+        fNavn: "Sara",
+        alder: 32,
+        interesser: ["musikk", "mat", "hoppe hoppetau", "kode"]
+    }
+]
+
+console.log("Oppgave 3 (Trinn 2) personer13")
+
+function filtrerOgSorter(person, alder, interesse) {
+    if (!Array.isArray(person)) { // Sjekker om input er et array
+        console.log("Input er ikke et array!");
+        return[];
+    } else if (interesse.trim() === "") { // Sjekker om det er skrevet inn noe (filterer bort mellomrom med trim)
+        console.log("Ikke skrevet inn en interesse!")
+        return[];
+    } else if (typeof alder !== "number" || isNaN(alder) || alder < 0) { // isNaN koverterer fra string til int. 
+        console.log("Ugyldig tall!")
+        return[];
+    } else {
+        //let personer = person.filter(n => n.fNavn)
+        //let gammelNok = person.filter(a => a.alder > alder)
+        let matchInteresse = person.filter(i => i.interesser.some(i => i.toLowerCase().trim() === interesse.toLowerCase().trim())).sort((a, b) => b.alder - a.alder);
+        let resultat = matchInteresse.map(a => `${a.fNavn} ${a.alder}`)
+        // Her oppretter vi en teller som teller antall matcher vi finner i arryet. Om vi får 0 matcher, stopper scriptet.
+        let count = 0; // Teller begynner på verdi 0
+        for (let i = 0; i < matchInteresse.length; i++ ) { // Går gjennom arrayet (en etter en)                       
+            count++; // Legger til 1 hver gang den går gjennom løkka -
+        }
+        if (count === 0){ // Om vi ikke fåri arrayet  noen match, får man melding om det.
+            console.log("Fant ingen match i arrayet!")
+            console.log(count) // Viser: 0
+            return[];
+        } else { // Får vi match i arrayet på input, går den inn her
+            // console.log(count) // Sjekker hvor mange
+            //console.log("--- Resultatet på linje: ---")
+            //console.log(`${resultat.join(", ")}`)
+            // --- Fremgangsmåte ---
+            // Først finner vi navnene med .filter(), så finner vi de som har mach med interesse med .some() og deretter sorterer på alder .sort()
+            // OBS: Når jeg bruker map sånn her: .map(a => a.fNavn) - så endrer man dette resultet fra array til string. Da må jeg går smatidig sortere på alder.
+            // Her må jeg ike opprette en egen resultet-variabel, men mer oversiktlig for meg her (matchInteresse-variabelen blir så lang, uoversiktlig). 
+            // Mao, jeg kunne her ha lagt på map etter dette: sort((a, b) => b.alder - a.alder).map(a => `${a.fNavn} ${a.alder}`)
+            // Alternativ måte å vise resultatet på - Liste det opp under hverandre:            
+            // Dropper løkka da jeg heller vil returnere liste og linje og da må jeg gjøre det i en "return" (en return per funksjon)
+            // for (let a of matchInteresse) {
+            //     console.log(`- ${a.fNavn} alder: ${a.alder}`)           
+            // }
+            // OBS: En funksjon kan bare returnere én verdi. Derfor må jeg gjøre om return til et objekt:
+            // Under måe jeg da returnere både resultetet med (array med trenger) samt resultetet med for..of-løkka:
+            return { // Setter return her da jeg lister ut resultatet på to forskjellige måter.   
+                liste: resultat,             
+                linje: matchInteresse.map(a => `- ${a.fNavn} alder: ${a.alder}`), // For å vise dette, må vi kalle på dette objektet og da sin "liste"                
+            };
+        }
+    }
+}
+console.log("--- Resultatet på linje: ---")
+let resultat13 = filtrerOgSorter(personer7, 4, "musikk");
+console.log(resultat13.linje.join(", "));
+console.log("--- Resultatet vi for-løkke: ---");
+console.log(`${resultat13.liste.join("\n")}`);
+
+console.log("") // Kun for linjeskift (lage et skille i consollen fra forrige oppgave)
+
+// ----------------------------------------------
+// Oppgave 3 – Utvidelse av "Filtrering og sortering"
+// ---- Jeg lager hele oppgaven på nytt ----
+// - Lag en funksjon som:
+// - Tar inn et array med personer (slik du har gjort før).
+// - Bruker både filter og map til å finne personer som matcher en gitt interesse og er eldre enn en gitt alder.
+// - Sorterer resultatet etter alder (eldst først).
+// --- Nytt krav ---:
+//   Returner et objekt med tre ting:
+//   - antall: hvor mange personer som matcher (tallet).
+//   - linje: resultatet på én linje, separert med komma.
+//   - liste: resultatet som en liste (én på hver linje).
+console.log("Oppgave 3 (Trinn 2) - Utvidelse")
+let personer8 = [
+    {
+        fNavn: "Thomas",
+        alder: 27,
+        interesser: ["mat", "musikk", "gaming", "trening"]
+    },
+    {
+        fNavn: "Seth",
+        alder: 21,
+        interesser: ["bil", "mat", "hoppe hoppetau", "golf"]
+    },
+    {
+        fNavn: "Siggen",
+        alder: 28,
+        interesser: ["mat", "trening", "kode", "vin", "musikk"]
+    },
+    {
+        fNavn: "Joey",
+        alder: 25,
+        interesser: ["gaming", "serier", "løpe", "mat", "bil"]
+    },
+    {
+        fNavn: "Sara",
+        alder: 35,
+        interesser: ["musikk", "mat", "hoppe hoppetau", "kode"]
+    },
+    {
+        fNavn: "Arne",
+        alder: 45,
+        interesser: ["Musikk ", "bil", "fly", "skyting"]
+    }
+]
+let per = "Prsoner";
+function finnePersonerUtvidelse(person, alder, interesse) {
+    // Feilhåndtering
+    if (!Array.isArray(person)) {
+        console.log("Input er ikke et array!")
+        return{ linje: [], teller: 0 }; // Her må "linje" fortsatt returneres som array da vi spør om det helt nederst: ${resultat14.linje.join(", ")}
+    } else if (typeof alder !== "number" || alder < 1) {
+        console.log("Alder er ikke et tall!")
+        return{ linje: [], teller: 0 };
+    } else if (interesse.trim() === "") {
+        console.log("Ikke skrevet inn en interesse!")
+        return{ linje: [], teller: 0 };
+    } else {
+        let personer = person.filter(i => i.interesser.some(i => i.toLowerCase().trim() === interesse.trim().toLowerCase()) && i.alder > alder).sort((a, b) => b.alder - a.alder);
+        let henteUt = personer.map(a => `${a.fNavn} ${a.alder}`)
+        let count = 0; // Teller antal matcher som skal vises i resultetet.
+        // Alternetiv måte å telle elemeter på (count2):
+        //let count2 = henteUt.length;
+        //console.log(count2)
+        // Går gjennom arrayet med for..of-løkke for å telle antall matcher:
+        for (let person of henteUt) {
+            //console.log(`${henteUt} alder ${henteUt.alder}`)
+            count++;
+        }
+        if (count === 0) {
+            console.log(`Fant ingen personer med interesse "${interesse.trim()}" som er ${alder} år eller eldre!`)
+            return { linje:[], teller: 0}; 
+        } else {
+            return {
+                linje: henteUt,
+                teller: count
+            };
+        }        
+    }    
+}
+let resultat14 = finnePersonerUtvidelse(personer8, 1, "")
+console.log(`Antall personer funnet: ${resultat14.teller}`)
+console.log(`På en linje: ${resultat14.linje.join(", ")}`)
+console.log(`Listet ut: \n${resultat14.linje.join("\n")}`)
+
+console.log("") // Kun for linjeskift (lage et skille i consollen fra forrige oppgave)
+
+// ----------------------------------------------
+// Oppgave 4 – Gruppering av personer etter interesse
+
+// Lag en funksjon grupperEtterInteresse(personer) som:
+// - Tar inn et array med personer (slik du har laget tidligere, med fNavn, alder, interesser).
+// - Går gjennom alle personer, og samler dem i grupper basert på interessene deres.
+// - Returnerer et objekt der nøkkelen er interessen og verdien er en liste med navn.
+
+console.log("Oppgave 4 (Trinn 2) - Gruppering av personer etter interesse")
+
+let personer9 = [ // Array med opbjekter
+    {
+        fNavn: "Thomas",
+        alder: 28,
+        interesser: ["musikk"]
+    },
+    {
+        fNavn: "siggen",
+        alder: 27,
+        interesser: ["vin", "musikk"]
+    },
+    {
+        fNavn: "Seth",
+        alder: 21,
+        interesser: ["vin", "musikk", "mat"]
+    }
+
+]
+
+function grupperEtterInteresse(personer) {
+    //let henteData = personer.find(i => i.interesse);
+    let grupper = {}; // Her oppretter vi et objekt som vi nedenfor skal fylle med alle interessene som "nøker" og navnene som "egenskapene".
+    for (let person of personer) { // Henter all info fra objekt-arrayet
+        // console.log(person);
+
+        for (let interesse of person.interesser) {  // Her henter vi alle interessene i arrayet som vi skal legge inn i objektet.
+
+            // hvis vi ikke har interessen fra før (dette blir nøklene i det nye objektet vi lager her), oppretter vi interessen som tom array
+            if (!grupper[interesse]) {
+                grupper[interesse] = []; // Oppretter alle nye interesser som arrays. Disse skal inneholde nanvene.
+            }      
+            // I Interessen (opretttet over, legger vi til personens navn som er oppført med denne interessen.     
+            grupper[interesse].push(person.fNavn); // Her legger vi til navnet (egenskapen) i interessen (nøkkelen)
+        }
+    }
+    return grupper;
+}
+
+let resultat15 = grupperEtterInteresse(personer9);
+// Tre måter å liste ut dataene oversiktlig på
+console.table(resultat15)
+console.log(JSON.stringify(resultat15, null, 2))
+for (let interesse in resultat15) {
+    console.log(`${interesse}: ${resultat15[interesse].join(", ")}`);
+}
+
+// BARE EN TEST: Demonstasjon av det som skjer over, bare lettere tydleig å se(forstå)
+let kjøretøy = "bil"; 
+let gruppe1 = {}; // Tomt objekt
+gruppe1[kjøretøy] = []; // Oppretter nøkkel "kjøretøy" i opbjekte og denne blir et array med alle ekenskapene som legges inn i etterkant (volvo og skoda)
+gruppe1[kjøretøy].push("volvo") // Legger til en egenskap
+gruppe1[kjøretøy].push("Skoda")
+console.log(gruppe1)
+console.log(JSON.stringify(gruppe1, null, 2))
+
+// ----------------------------------------------
+// Oppgave 4 - Gruppering av personer etter interesse
+// PÅ NYTT - Kortere versjon - Med brukav reduce()
+
+let personer11 = [ // Array med opbjekter
+    {
+        fNavn: "Thomas",
+        alder: 27,
+        interesser: ["bil", "musikk"]
+    },
+    {
+        fNavn: "Siggen",
+        alder: 35,
+        interesser: ["vin", "musikk"]
+    }
+]
+
+function grupperEtterInteresse2(personer) {
+    
+    return personer.reduce((grupper, person) => { // Blir som "akk, nå" - «akk» samler opp summen gjennom alle rudnene i løkka. «nå» blir neste verdi som legges til "akk".
+        // Reduce bygger opp et objekt (grupper)
+        // reduce() går gjennom hele arrayet én person av gangen.
+        // grupper er akkumulatoren (bygger opp resultatet underveis).
+        // person er elementet vi jobber med akkurat nå.
+        // Helt til slutt returnerer vi hele grupper-objektet.
+        person.interesser.forEach(interesse => { // Går gjennom alle interessene i "person" (personer11).
+            // For hver person går vi gjennom alle interessene deres.
+            // Hvis en person har f.eks. ["mat", "musikk"], så kjører denne blokken to ganger – én gang med "mat", og én gang med "musikk".
+            if (!grupper[interesse]) { // Sjekker om interesse-nøklene finnes. 
+                grupper[interesse] = []; // Om ikke interessene finnes, legges disse nøklene til "Grupper" ("bil", "musikk" og "vin") og den et tomt array.
+            }   // Eks: grupper = { bil: [] }
+            grupper[interesse].push(person.fNavn); // Legger inn alle egenskapene (altså navnene thomas og siggen) i interesse-nøklene (bil, musikk og vin).
+        }); // Eks: grupper = { bil: ["Thomas"] }
+        return grupper; // Returnerer hele gruppa med alle nøklene som ble opprettet og med alle nanvnen som inngår i dem.
+    }, {}); // Siste/tredje parameter i reduce() som alltid er startverdien. Dvs. at "Grupper" starert som et tomt objekt: {}
+    // Eks: return personer.reduce((grupper, person) => { ... }, {});
+}
+
+// Forklaring av første runde:
+// Runde 1 (Thomas, interesser = ["bil", "musikk"]):
+// Starter med {}
+// Oppretter nøkkel "bil", legger til "Thomas"
+// Oppretter nøkkel "musikk", legger til "Thomas"
+// Etter runde 1:
+
+let resultat16 = grupperEtterInteresse2(personer11);
+console.log(resultat16)
+
+// ----------------------------------------------
+// Oppgave 5 – Tell antall personer per interesse
+// Oppgavetekst:
+// Nå har du en funksjon som grupperer personer etter interesse.
+// Neste steg er å lage en funksjon som ikke bare lister navnene, 
+// men også teller hvor mange personer som hører til hver interesse.
+// 1. Funksjonen skal ta inn samme personer-array.
+// 2. Den skal returnere et objekt der nøkkelen er interessen og verdien er antall personer som har den interessen (og ikke navnene).
+// 3. Hvis vi har noe sånt som:
+
+let personer17 = [
+    {
+        fNavn: "Thomas",
+        interesse: ["musikk", "bil"]
+    },
+    {
+        fNavn: "Siggen",
+        interesse: ["vin", "musikk"]
+    }
+]
+
+function grupperEtterInteresse3(personer) {
+    personer.reduce((interesse, person) => {
+        person.interesser.forEach(interesse => {
+            if (!grupper[interesse])
+        });
+        
+    }, {});
+}
+
+
+let resultat17 = grupperEtterInteresse3(personer17);
+console.log(resultat17);
