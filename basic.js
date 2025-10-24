@@ -1120,7 +1120,7 @@ function finnePersonerUtvidelse(person, alder, interesse) {
     } else {
         let personer = person.filter(i => i.interesser.some(i => i.toLowerCase().trim() === interesse.trim().toLowerCase()) && i.alder > alder).sort((a, b) => b.alder - a.alder);
         let henteUt = personer.map(a => `${a.fNavn} ${a.alder}`)
-        let count = 0; // Teller antal matcher som skal vises i resultetet.
+        let count = 0; // Teller antall matcher som skal vises i resultetet.
         // Alternetiv måte å telle elemeter på (count2):
         //let count2 = henteUt.length;
         //console.log(count2)
@@ -1176,20 +1176,19 @@ let personer9 = [ // Array med opbjekter
 
 ]
 
-function grupperEtterInteresse(personer) {
-    //let henteData = personer.find(i => i.interesse);
+function grupperEtterInteresse(personer) {    
     let grupper = {}; // Her oppretter vi et objekt som vi nedenfor skal fylle med alle interessene som "nøker" og navnene som "egenskapene".
     for (let person of personer) { // Henter all info fra objekt-arrayet
         // console.log(person);
-
         for (let interesse of person.interesser) {  // Her henter vi alle interessene i arrayet som vi skal legge inn i objektet.
-
-            // hvis vi ikke har interessen fra før (dette blir nøklene i det nye objektet vi lager her), oppretter vi interessen som tom array
+            // hvis vi ikke har interessen fra før (dette blir nøklene i det nye objektet vi lager her), oppretter vi interessen som tomt array
             if (!grupper[interesse]) {
                 grupper[interesse] = []; // Oppretter alle nye interesser som arrays. Disse skal inneholde nanvene.
+                // første runde blir: grupper = {musikk: []}
             }      
-            // I Interessen (opretttet over, legger vi til personens navn som er oppført med denne interessen.     
+            // I interessen (opretttet over, legger vi til personens navn som er oppført med denne interessen.     
             grupper[interesse].push(person.fNavn); // Her legger vi til navnet (egenskapen) i interessen (nøkkelen)
+            // første runde blir: grupper = { musikk: ["thomas"]}
         }
     }
     return grupper;
@@ -1202,6 +1201,21 @@ console.log(JSON.stringify(resultat15, null, 2))
 for (let interesse in resultat15) {
     console.log(`${interesse}: ${resultat15[interesse].join(", ")}`);
 }
+// Resultet av oppven over: 
+// {
+//   "musikk": [
+//     "Thomas",
+//     "siggen",
+//     "Seth"
+//   ],
+//   "vin": [
+//     "siggen",
+//     "Seth"
+//   ],
+//   "mat": [
+//     "Seth"
+//   ]
+// }
 
 // BARE EN TEST: Demonstasjon av det som skjer over, bare lettere tydleig å se(forstå)
 let kjøretøy = "bil"; 
@@ -1260,6 +1274,11 @@ function grupperEtterInteresse2(personer) {
 let resultat16 = grupperEtterInteresse2(personer11);
 console.log(resultat16)
 
+console.log(" ")
+console.log("-----------------------")
+console.log("Oppgave 5 med reduce()– Tell antall personer per interesse")
+console.log("-----------------------")
+console.log(" ")
 // ----------------------------------------------
 // Oppgave 5 – Tell antall personer per interesse
 // Oppgavetekst:
@@ -1273,23 +1292,69 @@ console.log(resultat16)
 let personer17 = [
     {
         fNavn: "Thomas",
-        interesse: ["musikk", "bil"]
+        interesser: ["musikk", "bil"]
     },
     {
         fNavn: "Siggen",
-        interesse: ["vin", "musikk"]
+        interesser: ["vin", "musikk"]
     }
 ]
 
 function grupperEtterInteresse3(personer) {
-    personer.reduce((interesse, person) => {
-        person.interesser.forEach(interesse => {
-            if (!grupper[interesse])
+    return personer.reduce((teller, person) => {  
+        person.interesser.forEach(interesse => { // Går gjennom alle interessene til personen
+            if (!teller[interesse]) {// Sjekker om interesse-nøklene finnes. 
+                teller[interesse] = 0; // Hvis interessene ikke finnes i teller-objektet, opprett den med verdien 0;
+            }
+            teller[interesse]++; // Øker verdien (antall personer med denne interessen)
         });
-        
+        return teller;        
     }, {});
 }
 
-
 let resultat17 = grupperEtterInteresse3(personer17);
 console.log(resultat17);
+console.table(resultat17);
+
+// Forklaring av oppgave 5 over linje for linje:
+// reduce((teller, person) => { ... }, {})
+// → Vi starter med et tomt objekt {} som skal fylles med antall per interesse.
+// teller = objektet vi bygger opp.
+// person = hvert element i personer-arrayet.
+// person.interesser.forEach(interesse => { ... })
+// → For hver person går vi gjennom alle interessene deres.
+// if (!teller[interesse]) { teller[interesse] = 0; }
+// → Hvis interessen ikke finnes fra før i objektet, opprett en ny nøkkel og sett verdien til 0.
+// teller[interesse]++
+// → Øk telleren med 1 for denne interessen.
+// Til slutt returneres hele teller-objektet.
+
+
+// Tar Oppgave 5 på nytt for trening – Tell antall personer per interesse
+console.log("Tar Oppgave 5 på nytt for trening")
+let personer18 = [
+    {
+        fNavn: "Even",
+        interesser: ["Bil", "musikk"]
+    },
+    {
+        fNavn: "Ingrid",
+        interesser: ["musikk", "båt"]
+    }
+]
+function grupperEtterInteresse4(personer) {
+    return personer.reduce((teller, nåværende) => {
+        nåværende.interesser.forEach(interesse => {
+            if (!teller[interesse]) {
+                teller[interesse] = 0;
+            }
+            teller[interesse]++;
+        });
+        return teller;
+    }, {});
+}
+let resultat18 = grupperEtterInteresse4(personer18);
+console.table(resultat18);
+
+// Nå fortsetter løringen videre emd DOM-manipulasjon som tas i egen js.fil.
+
